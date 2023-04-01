@@ -55,8 +55,6 @@ def rasp(message):
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
         k = bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=knopki)
         bot.register_next_step_handler(k, kurs)
-    elif message.text == "/close":
-        adem(message)
         
         
 def kurs(message):
@@ -102,34 +100,34 @@ def kurs2(message):
     knopka2 = "USD"
     knopka3 = "EUR"
     knopka4 = "CNY"
-    knopka = "Назад"
+    knopkaBack = "Назад"
     knopka5 = "Меню"
-    knopki.add(knopka1, knopka2, knopka3, knopka4, knopka, knopka5)
+    knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
     if message.text == "RUB":
         k32 = "RUB"
         price = convert(base = k1, amount = 1, to=['RUB'])
-        bot.send_message(message.chat.id, f'{k1} = {price["RUB"]} ₽')
+        bot.send_message(message.chat.id, f'{k1} = {price["RUB"], k2}')
        
-        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki)
+        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
         bot.register_next_step_handler(k, kurs2)
     elif message.text == "USD":
         k32 = "USD"
         price = convert(base = k1, amount = 1, to=['USD'])
         bot.send_message(message.chat.id, f'{k1} = {price["USD"]} $')
-        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki)
+        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
         bot.register_next_step_handler(k, kurs2)
     elif message.text == "EUR":
         k32 = "EUR"
         price = convert(base = k1, amount = 1, to=['EUR'])
         bot.send_message(message.chat.id, f'{k1} = {price["EUR"]} €')
-        k = bot.send_message(message.chat.id, "Во что конвертировать", reply_markup=knopki)
+        k = bot.send_message(message.chat.id, "Во что конвертировать", reply_markup=knopki.add(knopkaBack))
         bot.register_next_step_handler(k, kurs2)
     elif message.text == "CNY":
         k32 = "CNY"
         price = convert(base = k1, amount = 1, to=['CNY'])
         bot.send_message(message.chat.id, f'{k1} = {price["CNY"]} ¥')
-        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki)
-        bot.register_next_step_handler(k, kurs2)
+        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
+        bot.register_next_step_handler(k, kurs)
     elif message.text == "Назад":
         k = bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=(knopki))
         
