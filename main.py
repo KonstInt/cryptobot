@@ -101,39 +101,33 @@ def kurs2(message):
     knopka3 = "EUR"
     knopka4 = "CNY"
     knopka5 = "Меню"
-    knopkaBack = "Назад"
+    knopkaBack = "Выбор конвертируемой валюты"
     knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
     if message.text == "RUB":
         k32 = "RUB"
         price = convert(base = k1, amount = 1, to=['RUB'])
         bot.send_message(message.chat.id, f'{k1} = {price["RUB"]} ₽')
-       
-        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
-        bot.register_next_step_handler(k, kurs2)
     elif message.text == "USD":
         k32 = "USD"
         price = convert(base = k1, amount = 1, to=['USD'])
         bot.send_message(message.chat.id, f'{k1} = {price["USD"]} $')
-        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
-        bot.register_next_step_handler(k, kurs2)
     elif message.text == "EUR":
         k32 = "EUR"
         price = convert(base = k1, amount = 1, to=['EUR'])
         bot.send_message(message.chat.id, f'{k1} = {price["EUR"]} €')
-        k = bot.send_message(message.chat.id, "Во что конвертировать", reply_markup=knopki.add(knopkaBack))
-        bot.register_next_step_handler(k, kurs2)
     elif message.text == "CNY":
         k32 = "CNY"
         price = convert(base = k1, amount = 1, to=['CNY'])
         bot.send_message(message.chat.id, f'{k1} = {price["CNY"]} ¥')
-        k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
-        bot.register_next_step_handler(k, kurs)
+        
     elif message.text == "Назад":
         k = bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=(knopki))
         
         bot.register_next_step_handler(k, kurs)
     elif message.text == "Меню":
         adim(message)
+    k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
+    bot.register_next_step_handler(k, kurs2)
 
 
 
@@ -235,8 +229,9 @@ def mine(message):
         adim(message)
     elif message.text == "/close":
         adem(message)
+        
 def adem(message):
     a = telebot.types.ReplyKeyboardRemove()
     bot.send_message(message.from_user.id, 'ок', reply_markup=a)
-
-bot.polling()
+    
+bot.infinity_polling()
