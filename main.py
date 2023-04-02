@@ -106,7 +106,7 @@ def kurs2(message):
     if message.text == "RUB":
         k32 = "RUB"
         price = convert(base = k1, amount = 1, to=['RUB'])
-        bot.send_message(message.chat.id, f'{k1} = {price["RUB"], k2}')
+        bot.send_message(message.chat.id, f'{k1} = {price["RUB"]} ₽')
        
         k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki.add(knopkaBack))
         bot.register_next_step_handler(k, kurs2)
@@ -151,7 +151,7 @@ def crypto(message):
 
     if message.text == 'RUB':
         price = cg.get_price(ids='bitcoin, ethereum, litecoin, tether', vs_currencies='rub')
-        mes = bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["rub"]} ₽\n \n'
+        bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["rub"]} ₽\n \n'
                                           f'Ethereum == {price["ethereum"]["rub"]} ₽\n \n'
                                           f'Litecoin == {price["litecoin"]["rub"]} ₽\n \n'
                                           f'Tether == {price["tether"]["rub"]} ₽\n \n')
@@ -161,7 +161,7 @@ def crypto(message):
 
     elif message.text == 'USD':
         price = cg.get_price(ids='bitcoin, ethereum, litecoin, tether', vs_currencies='usd')
-        mes = bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["usd"]} $\n \n'
+        bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["usd"]} $\n \n'
                                           f'Ethereum == {price["ethereum"]["usd"]} $\n \n'
                                           f'Litecoin == {price["litecoin"]["usd"]} $\n \n'
                                           f'Tether == {price["tether"]["usd"]} $\n \n')
@@ -169,7 +169,7 @@ def crypto(message):
         bot.register_next_step_handler(cr, crypto)
     elif message.text == 'EUR':
         price = cg.get_price(ids='bitcoin, ethereum, litecoin, tether', vs_currencies='eur')
-        mes = bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["eur"]} €\n \n'
+        bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["eur"]} €\n \n'
                                           f'Ethereum == {price["ethereum"]["eur"]} €\n \n'
                                           f'Litecoin == {price["litecoin"]["eur"]} €\n \n'
                                           f'Tether == {price["tether"]["eur"]} €\n \n')
@@ -178,7 +178,7 @@ def crypto(message):
         bot.register_next_step_handler(cr, crypto)
     elif message.text == 'CNY':
         price = cg.get_price(ids='bitcoin, ethereum, litecoin, tether', vs_currencies='cny')
-        mes = bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["cny"]} ¥\n \n'
+        bot.send_message(message.chat.id, f'Bitcoin == {price["bitcoin"]["cny"]} ¥\n \n'
                                                 f'Ethereum == {price["ethereum"]["cny"]} ¥\n \n'
                                                 f'Litecoin == {price["litecoin"]["cny"]} ¥\n \n'
                                                 f'Tether == {price["tether"]["cny"]} ¥\n \n')
@@ -190,7 +190,7 @@ def crypto(message):
     elif message.text == "/close":
         adem(message)
 
-def mine(messange):
+def mine(message):
     knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
     knopka1 = types.KeyboardButton('Что такое майнинг?')
     knopka2 = types.KeyboardButton('Основные принципы работы')
@@ -198,9 +198,9 @@ def mine(messange):
     knopka4 = types.KeyboardButton('Меню')
     knopki.add(knopka1, knopka2, knopka3, knopka4)
         
-    if messange.text == 'Что такое майнинг?':
+    if message.text == 'Что такое майнинг?':
         
-        m = bot.send_message(messange.chat.id, f'Слово «майнинг» пришло к нам из английского языка и в буквальном смысле означает добычу полезных ископаемых. В контексте финансов и информационных технологий таким «сырьем» считается криптовалюта. \n \n'
+        m = bot.send_message(message.chat.id, f'Слово «майнинг» пришло к нам из английского языка и в буквальном смысле означает добычу полезных ископаемых. В контексте финансов и информационных технологий таким «сырьем» считается криптовалюта. \n \n'
                                                f'Майнинг – это добыча цифровой валюты с помощью специального оборудования. \n \n'
                                                f'Если говорить на языке блокчейн-инженеров, майнинг представляет собой присоединение блоков, в которых хранится информация о проведенных транзакциях. В результате они образуют непрерывную и последовательную цепочку – блокчейн. \n \n'
                                                f'Чтобы присоединить блок, необходимо решить определенную математическую задачу, расшифровав алгоритм криптовалюты.  \n \n'
@@ -208,13 +208,13 @@ def mine(messange):
                                                f'При этом чем больше майнеров нацелены на решение задачи, тем больше усложняются поиски верного ответа и падает стоимость. \n \n', reply_markup=knopki)
         bot.register_next_step_handler(m, mine)
        
-    elif messange.text == 'Основные принципы работы':
+    elif message.text == 'Основные принципы работы':
         
-        m = bot.send_message(messange.chat.id, f'За обработку информации владелец компьютерного ресурса получает вознаграждение в виде комиссии, назначаемой владельцем виртуальных денег, или вознаграждения в виде части эмитированной в процессе майнинга криптовалюты. Именно на этом основан один из главных принципов работы платежных систем, предусматривающих использования биткоинов и некоторых других виртуальных денег. В первую очередь обрабатываются и проводятся те транзакции, где установлена самая высокая комиссия. Поэтому сделки с нулевой комиссией могут проводиться очень долго.', reply_markup=knopki)
+        m = bot.send_message(message.chat.id, f'За обработку информации владелец компьютерного ресурса получает вознаграждение в виде комиссии, назначаемой владельцем виртуальных денег, или вознаграждения в виде части эмитированной в процессе майнинга криптовалюты. Именно на этом основан один из главных принципов работы платежных систем, предусматривающих использования биткоинов и некоторых других виртуальных денег. В первую очередь обрабатываются и проводятся те транзакции, где установлена самая высокая комиссия. Поэтому сделки с нулевой комиссией могут проводиться очень долго.', reply_markup=knopki)
         bot.register_next_step_handler(m, mine)
 
-    elif messange.text == 'Майнинг биткоинов и других криптовалют':
-        m = bot.send_message(messange.chat.id, f'Для чего биткоину нужны майнеры? \n \n'
+    elif message.text == 'Майнинг биткоинов и других криптовалют':
+        m = bot.send_message(message.chat.id, f'Для чего биткоину нужны майнеры? \n \n'
                                                f'Важно понимать, что распространенное мнение о том, что необходимость в майнинге и, как следствие, майнерах отпадет после выпуска последнего биткоина, крайне далеко от истины. Как уже было сказано, не менее важными функциями майнинга являются обработка информации, проведение транзакций и обеспечение безопасности функционирования платежной системы. Очевидно, что выполнение подобной работы будет требоваться всегда. \n \n'
                                                f'Майнинг Биткоинов \n \n'
                                                f'Безусловно, самой популярной криптовалютой на сегодня является биткоин (в англ. варианте написания – bitcoin), созданный в 2008-2009 годах Сатоси Накамото. Именно поэтому, чаще всего, принимается решение о майнинге именно этого вида виртуальных денег. Однако, необходимо понимать, что оборотной стороной популярности является огромное количество привлеченных для обработки информации ресурсов. Поэтому сегодня для того, чтобы реально заработать на майнинге биткоинов требуется наличие чрезвычайно больших вычислительных мощностей. \n \n'
@@ -231,10 +231,10 @@ def mine(messange):
 
         bot.register_next_step_handler(m, mine)
 
-    elif messange.text == 'Меню':
-        adim(messange)
-    elif messange.text == "/close":
-        adem(messange)
+    elif message.text == 'Меню':
+        adim(message)
+    elif message.text == "/close":
+        adem(message)
 def adem(message):
     a = telebot.types.ReplyKeyboardRemove()
     bot.send_message(message.from_user.id, 'ок', reply_markup=a)
