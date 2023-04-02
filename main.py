@@ -100,8 +100,8 @@ def kurs2(message):
     knopka2 = "USD"
     knopka3 = "EUR"
     knopka4 = "CNY"
-    knopkaBack = "Назад"
     knopka5 = "Меню"
+    knopkaBack = "Назад"
     knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
     if message.text == "RUB":
         k32 = "RUB"
