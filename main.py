@@ -58,7 +58,7 @@ def rasp(message):
 
     elif message.text == "Выбор видеокарты":
         v = bot.send_message(message.chat.id,
-                             'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число) и название монеты, которую хочешь майнить. Например: "200 amd"".',
+                             'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число) и название монеты, которую хочешь майнить. Например: "500 etc".',
                              reply_markup=button_utils.videocart)
         bot.register_next_step_handler(message, find_best_graphics_card_message)
     elif message.text == 'Данные с биржи':
@@ -184,7 +184,7 @@ def find_best_graphics_card_message(message):
         return
     elif " " not in text:
         bot.send_message(message.chat.id,
-                         "Некорректный ввод. Введи бюджет (число) и название монеты, которую хочешь майнить. Например: '200 amd'.")
+                         "Некорректный ввод. Введи бюджет (число) и название монеты, которую хочешь майнить. Например: '500 etc'.")
         return
 
     budget, coin = text.split(" ", 1)
