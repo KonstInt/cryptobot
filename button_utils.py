@@ -10,3 +10,5 @@ valute = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
 valute.add(types.KeyboardButton('RUB'), types.KeyboardButton('USD'),
            types.KeyboardButton('EUR'), types.KeyboardButton('CNY'),
            types.KeyboardButton('Меню'))
+videocart = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+videocart.add(types.KeyboardButton('Меню'))
