@@ -13,7 +13,7 @@ import json
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot("6109307024:AAEH5mXIan0W08M06Co3E1uUzMCMgbgbKjI")
+bot = telebot.TeleBot("6260207697:AAHKctNDE5iT9o5AXJaOQO6mtSRuhg5hYOY")
 
 
 @bot.message_handler(commands=['start'])
