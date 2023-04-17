@@ -13,10 +13,10 @@ import json
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot("6260207697:AAHKctNDE5iT9o5AXJaOQO6mtSRuhg5hYOY")
+bot = telebot.TeleBot("")
+current_function = ''
 
-
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'close'])
 def adim(message):
     knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
     knopka1 = types.KeyboardButton('Курс криптовалют')
@@ -25,11 +25,21 @@ def adim(message):
     knopka4 = types.KeyboardButton('Данные с биржи')
     knopka5 = types.KeyboardButton('Выбор видеокарты')
     knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
-    vib = bot.send_message(message.chat.id, 'Выберите опцию', reply_markup=knopki)
-    bot.register_next_step_handler(vib, rasp)
+    if message.text=='/close':
+        adem(message)
+    elif message.text == '/start':
+        vib = bot.send_message(message.chat.id, f'Привет {message.from_user.first_name}\nВыберите опцию ', reply_markup=knopki)
+        bot.register_next_step_handler(vib, rasp)
+    elif message.text == 'Меню':
+        vib = bot.send_message(message.chat.id, f'Выберите опцию ', reply_markup=knopki)
+        bot.register_next_step_handler(vib, rasp)
+    else:
+        vib = bot.send_message(message.chat.id, f'Я вас не понимаю...\nВыберите опцию нажав на кнопки ниже', reply_markup=knopki)
+        bot.register_next_step_handler(vib, rasp)
 
 
 def rasp(message):
+    global current_function
     if message.text == 'Курс криптовалют':
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
         knopka1 = types.KeyboardButton('RUB')
@@ -53,10 +63,13 @@ def rasp(message):
         knopka4 = "CNY"
         knopka5 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
-        k = bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=knopki)
-        bot.register_next_step_handler(k, kurs)
+        current_function = 'Курс валют'
+        bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=knopki)
+        #bot.register_next_step_handler(k, kurs)
 
     elif message.text == "Выбор видеокарты":
+        
+        current_function = message.text
         v = bot.send_message(message.chat.id,
                              'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число) и название монеты, которую хочешь майнить. Например: "500 etc".',
                              reply_markup=button_utils.videocart)
@@ -70,28 +83,31 @@ def rasp(message):
         knopki.add(knopka1, knopka2, knopka3, knopka4)
         bir = bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
         bot.register_next_step_handler(bir, exchange)
-
+    else:
+        adim(message)
 
 k1 = "adim"
 k2 = "adim"
 
+@bot.message_handler(func = lambda x: current_function == 'Курс валют')
 def kurs(message):
     global k1
     global k2
+    global current_function
     knopki = button_utils.valute
 
     if message.text == "Меню":
+        current_function = ''
         adim(message)
         return
-    elif message.text == "/close":
-        adem(message)
-        return
     k1 = message.text
-    k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki)
-    bot.register_next_step_handler(k, kurs2)
+    current_function = "Курс валют 2"
+    bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=knopki)
+    
 
-
+@bot.message_handler(func = lambda x: current_function == 'Курс валют 2')
 def kurs2(message):
+    global current_function
     knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
     knopka1 = "RUB"
     knopka2 = "USD"
@@ -101,15 +117,16 @@ def kurs2(message):
     knopkaBack = "Выбор конвертируемой валюты"
     knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
     if message.text == "Выбор конвертируемой валюты":
-        k = bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=(knopki))
-        bot.register_next_step_handler(k, kurs)
+        current_function = 'Курс валют'
+        bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=(knopki))
         return
     elif message.text == "Меню":
+        current_function = ''
         adim(message)
         return
     bot.send_message(message.chat.id, functions.valuteStr(k1, message.text))
-    k = bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=(knopki).add(knopkaBack))
-    bot.register_next_step_handler(k, kurs2)
+    bot.send_message(message.chat.id, "Во что конвертировать?", reply_markup=(knopki).add(knopkaBack))
+    
 
 
 def crypto(message):
@@ -176,10 +193,12 @@ def find_best_graphics_card(budget, coin):
             best_hashrate = hashrate
     return best_card
 
-@bot.message_handler(func=lambda message: True)
+@bot.message_handler(func=lambda l: current_function=="Выбор видеокарты")
 def find_best_graphics_card_message(message):
     text = message.text.lower()
     if message.text == 'Меню':
+        global current_function
+        current_function = ''
         adim(message)
         return
     elif " " not in text:
