@@ -9,11 +9,12 @@ from py_currency_converter import convert
 from pycoingecko import CoinGeckoAPI
 from telebot import types
 import json
+from config import token
 
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot("5894206051:AAEwMJpVHJ2x1ocTf8-cAXnWCrMnIMupsvc")
+bot = telebot.TeleBot(token)
 current_function = ''
 
 @bot.message_handler(commands=['start', 'close'])
