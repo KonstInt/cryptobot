@@ -12,3 +12,6 @@ valute.add(types.KeyboardButton('RUB'), types.KeyboardButton('USD'),
            types.KeyboardButton('Меню'))
 videocart = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
 videocart.add(types.KeyboardButton('Меню'))
+
+news = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+news.add(types.KeyboardButton('Получить новость'), types.KeyboardButton('Меню'))

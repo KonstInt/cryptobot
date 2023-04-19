@@ -13,7 +13,7 @@ import json
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot("")
+bot = telebot.TeleBot("5894206051:AAEwMJpVHJ2x1ocTf8-cAXnWCrMnIMupsvc")
 current_function = ''
 
 @bot.message_handler(commands=['start', 'close'])
@@ -24,7 +24,8 @@ def adim(message):
     knopka3 = types.KeyboardButton('Курс валют')
     knopka4 = types.KeyboardButton('Данные с биржи')
     knopka5 = types.KeyboardButton('Выбор видеокарты')
-    knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
+    knopka6 = types.KeyboardButton('Новости')
+    knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
     if message.text=='/close':
         adem(message)
     elif message.text == '/start':
@@ -37,9 +38,10 @@ def adim(message):
         vib = bot.send_message(message.chat.id, f'Я вас не понимаю...\nВыберите опцию нажав на кнопки ниже', reply_markup=knopki)
         bot.register_next_step_handler(vib, rasp)
 
-
+links = []
 def rasp(message):
     global current_function
+    global links
     if message.text == 'Курс криптовалют':
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
         knopka1 = types.KeyboardButton('RUB')
@@ -83,11 +85,43 @@ def rasp(message):
         knopki.add(knopka1, knopka2, knopka3, knopka4)
         bir = bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
         bot.register_next_step_handler(bir, exchange)
+    elif message.text == 'Новости':
+        knopki = button_utils.news
+        links = [functions.get_link_first_new_bits(), functions.get_link_first_new_forklog(), functions.get_link_first_new_habr(), functions.get_link_first_new_lenta(), functions.get_link_first_new_rcb(), functions.get_link_first_new_ria()]
+        current_function = 'Новости'
+        bot.send_message(message.chat.id, 'Хотите получить свежую новость?', reply_markup = knopki)
     else:
         adim(message)
 
 k1 = "adim"
 k2 = "adim"
+i = 0
+
+@bot.message_handler(func = lambda x: current_function == 'Новости')
+def get_news_1(message):
+    global current_function
+    
+    if message.text == 'Получить новость':
+        current_function = 'Новости 2'
+        get_news_2(message)
+        return
+    elif message.text == 'Меню':
+        current_function = ''
+        adim(message)
+        return
+
+@bot.message_handler(func = lambda x: current_function == 'Новости 2')
+def get_news_2(message):
+    global current_function
+    global links
+    global i
+    bot.send_message(message.chat.id, links[i])
+    i += 1
+    if i >= len(links):
+        i = 0
+    knopki = button_utils.news
+    bot.send_message(message.chat.id, 'Хотите получить ещё одну свежую новость?', reply_markup = knopki)
+    current_function = 'Новости'
 
 @bot.message_handler(func = lambda x: current_function == 'Курс валют')
 def kurs(message):
