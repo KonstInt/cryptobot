@@ -17,16 +17,9 @@ cg = CoinGeckoAPI()
 bot = telebot.TeleBot(token)
 current_function = ''
 
-@bot.message_handler(commands=['start', 'close'])
+@bot.message_handler(commands=['start', 'close', 'help'])
 def adim(message):
-    knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
-    knopka1 = types.KeyboardButton('Курс криптовалют')
-    knopka2 = types.KeyboardButton('Основы майнинга')
-    knopka3 = types.KeyboardButton('Курс валют')
-    knopka4 = types.KeyboardButton('Данные с биржи')
-    knopka5 = types.KeyboardButton('Выбор видеокарты')
-    knopka6 = types.KeyboardButton('Новости')
-    knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
+    knopki = button_utils.menu_buttons
     if message.text=='/close':
         adem(message)
     elif message.text == '/start':
@@ -35,9 +28,20 @@ def adim(message):
     elif message.text == 'Меню':
         vib = bot.send_message(message.chat.id, f'Выберите опцию ', reply_markup=knopki)
         bot.register_next_step_handler(vib, rasp)
+    elif message.text == '/help':
+        bot.send_message(message.chat.id, strings.help_command)
+        vib = bot.send_message(message.chat.id, f'Теперь выберите подходящую Вам опцию ', reply_markup=knopki)
+        bot.register_next_step_handler(vib, rasp)
     else:
         vib = bot.send_message(message.chat.id, f'Я вас не понимаю...\nВыберите опцию нажав на кнопки ниже', reply_markup=knopki)
         bot.register_next_step_handler(vib, rasp)
+
+# def help(message):
+#     global current_function
+#     bot.send_message(message.chat.id, strings.help_command)
+#     current_function = ''
+#     adim('/start')
+#     return 
 
 links = []
 def rasp(message):
@@ -58,6 +62,9 @@ def rasp(message):
         bot.register_next_step_handler(osn, mine)
     elif message.text == "/close":
         adem(message)
+    elif message.text == '/help':
+        adim(message)
+        return
     elif message.text == "Курс валют":
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
         knopka1 = "RUB"
@@ -110,6 +117,12 @@ def get_news_1(message):
         current_function = ''
         adim(message)
         return
+    elif message.text == '/help':
+        adim(message)
+        return
+        # bot.send_message(message.chat.id, strings.help_command)
+        # vib = bot.send_message(message.chat.id, f'Теперь выберите подходящую Вам опцию ', reply_markup=button_utils.menu_buttons)
+        # bot.register_next_step_handler(vib, rasp)
 
 @bot.message_handler(func = lambda x: current_function == 'Новости 2')
 def get_news_2(message):
@@ -133,6 +146,9 @@ def kurs(message):
 
     if message.text == "Меню":
         current_function = ''
+        adim(message)
+        return
+    elif message.text == '/help':
         adim(message)
         return
     k1 = message.text
@@ -171,6 +187,9 @@ def crypto(message):
     elif message.text == "/close":
         adem(message)
         return
+    elif message.text == '/help':
+        adim(message)
+        return
 
     bot.send_message(message.chat.id, functions.cryptoStr(message.text.lower()))
     cr = bot.send_message(message.chat.id, 'Во что конвертировать?', reply_markup=button_utils.valute)
@@ -185,8 +204,12 @@ def mine(message):
     elif message.text == "/close":
         adem(message)
         return
+    elif message.text == '/help':
+        adim(message)
+        return
     m = bot.send_message(message.chat.id, strings.sovets[message.text], reply_markup=buttons)
     bot.register_next_step_handler(m, mine)
+    
 
 
 def adem(message):
@@ -236,6 +259,9 @@ def find_best_graphics_card_message(message):
         current_function = ''
         adim(message)
         return
+    elif message.text == '/help':
+        adim(message)
+        return
     elif " " not in text:
         bot.send_message(message.chat.id,
                          "Некорректный ввод. Введи бюджет (число) и название монеты, которую хочешь майнить. Например: '500 etc'.")
@@ -282,6 +308,12 @@ def exchange(message):
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
         ex1 = bot.send_message(message.chat.id, f"Выберите валюту для подсчёта", reply_markup=knopki)
         bot.register_next_step_handler(ex1, exchange_ask)
+    elif message.text == '/help':
+        adim(message)
+        return
+    elif message.text == '/close':
+        adem(message)
+        return
     else:
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
         knopka1 = "btc"
@@ -308,6 +340,12 @@ def exchange_bid(message):
         bot.register_next_step_handler(bir2, exchange)
     elif (message.text == "Меню"):
         adim(message)
+    elif message.text == '/help':
+        adim(message)
+        return
+    elif message.text == '/close':
+        adem(message)
+        return
     else:
         bot.send_message(message.chat.id, functions.trades_find_bid(coin1=message.text))
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
@@ -334,6 +372,12 @@ def exchange_ask(message):
         bot.register_next_step_handler(bir2, exchange)
     elif (message.text == "Меню"):
         adim(message)
+    elif message.text == '/help':
+        adim(message)
+        return
+    elif message.text == '/close':
+        adem(message)
+        return
     else:
         bot.send_message(message.chat.id, functions.trades_find_ask(coin1=message.text))
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
@@ -360,6 +404,12 @@ def exchange_sum(message):
         bot.register_next_step_handler(bir2, exchange)
     elif (message.text == "Меню"):
         adim(message)
+    elif message.text == '/help':
+        adim(message)
+        return
+    elif message.text == '/close':
+        adem(message)
+        return
     else:
         bot.send_message(message.chat.id, functions.depth_find(coin1 = message.text))
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)

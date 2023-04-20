@@ -15,3 +15,11 @@ videocart.add(types.KeyboardButton('Меню'))
 
 news = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
 news.add(types.KeyboardButton('Получить новость'), types.KeyboardButton('Меню'))
+
+menu_buttons = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
+menu_buttons.add(types.KeyboardButton('Курс криптовалют'),
+        types.KeyboardButton('Основы майнинга'),
+        types.KeyboardButton('Курс валют'),
+        types.KeyboardButton('Данные с биржи'),
+        types.KeyboardButton('Выбор видеокарты'),
+        types.KeyboardButton('Новости'))
