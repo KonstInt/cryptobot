@@ -84,111 +84,87 @@ def trades_find_bid(coin1="btc", coin2="usd"):
 
     return info
 
-# ria
+def get_links_news():
+    
+    # ria
+    url_ria = 'https://ria.ru/product_kriptovalyuta/'
 
-def get_link_first_new_ria():
-    url = 'https://ria.ru/product_kriptovalyuta/'
+    page_ria = requests.get(url_ria).text
 
-    page = requests.get(url).text
+    soup_ria = BeautifulSoup(page_ria, 'lxml')
 
-    soup = BeautifulSoup(page, 'lxml')
+    block_news_ria = soup_ria.find('div', class_ = 'list list-tags')
 
-    block_news = soup.find('div', class_ = 'list list-tags')
+    first_new_ria = block_news_ria.find_all('div')[0]
 
-    first_new = block_news.find_all('div')[0]
+    first_new_link_ria = first_new_ria.find('a', href=True)["href"].strip()
 
-    first_new_link = first_new.find('a', href=True)["href"].strip()
+    # Habr
+    url_habr = 'https://habr.com/ru/search/?q=%D0%9A%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2%D0%B0%D0%BB%D1%8E%D1%82%D1%8B&target_type=posts&order=date'
 
-    return first_new_link
+    page_habr  = requests.get(url_habr).text
 
+    soup_habr  = BeautifulSoup(page_habr, 'lxml')
 
+    block_news_habr  = soup_habr.find('div', class_ = 'tm-articles-list')
 
-# Хабр
+    first_new_habr  = block_news_habr.find_all('article')[0]
 
-def get_link_first_new_habr():
-    url = 'https://habr.com/ru/search/?q=%D0%9A%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2%D0%B0%D0%BB%D1%8E%D1%82%D1%8B&target_type=posts&order=date'
+    first_new_link_habr  = 'https://habr.com' + first_new_habr.find('a', class_ = 'tm-title__link', href = True)["href"].strip()
 
-    page = requests.get(url).text
+    # rcb
+    url_rcb = 'https://www.rbc.ru/crypto/tags/?tag=%D0%9A%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2%D0%B0%D0%BB%D1%8E%D1%82%D0%B0'
 
-    soup = BeautifulSoup(page, 'lxml')
+    page_rcb = requests.get(url_rcb).text
 
-    block_news = soup.find('div', class_ = 'tm-articles-list')
+    soup_rcb = BeautifulSoup(page_rcb, 'lxml')
 
-    first_new = block_news.find_all('article')[0]
+    block_news_rcb = soup_rcb.find('div', class_ = 'js-load-container')
 
-    first_new_link = 'https://habr.com' + first_new.find('a', class_ = 'tm-title__link', href = True)["href"].strip()
+    first_new_rcb = block_news_rcb.find_all('div')[0]
 
-    return first_new_link
+    first_new_link_rcb = first_new_rcb.find('a', class_='item__link rm-cm-item-link js-rm-central-column-item-link', href=True)["href"].strip()
 
+    # forklog
 
+    url_forklog = 'https://forklog.com/news'
 
+    page_forklog = requests.get(url_forklog).text
 
-# rcb
+    soup_forklog = BeautifulSoup(page_forklog, 'lxml')
 
-def get_link_first_new_rcb():
-    url = 'https://www.rbc.ru/crypto/tags/?tag=%D0%9A%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2%D0%B0%D0%BB%D1%8E%D1%82%D0%B0'
+    block_news_forklog = soup_forklog.find('div', class_ = 'category_page_grid')
 
-    page = requests.get(url).text
+    first_new_forklog = block_news_forklog.find_all('div')[0]
 
-    soup = BeautifulSoup(page, 'lxml')
+    first_new_link_forklog = first_new_forklog.find('a', href=True)["href"].strip()
 
-    block_news = soup.find('div', class_ = 'js-load-container')
+    # bits_media
+    url_bits_media = 'https://bits.media/news/'
 
-    first_new = block_news.find_all('div')[0]
+    page_bits_media = requests.get(url_bits_media).text
 
-    first_new_link = first_new.find('a', class_='item__link rm-cm-item-link js-rm-central-column-item-link', href=True)["href"].strip()
+    soup_bits_media = BeautifulSoup(page_bits_media, 'lxml')
 
-    return first_new_link
+    block_news_bits_media = soup_bits_media.find('div', id ='main-news')
 
+    first_new_bits_media = block_news_bits_media.find_all('div')[1]
 
+    first_new_link_bits_media = 'https://bits.media/pr/' + first_new_bits_media.find('a', class_ = 'img-box', href=True)["href"].strip()
 
-# forklog
+    # lenta
+    url_lenta = 'https://lenta.ru/rubrics/economics/crypto/'
 
-def get_link_first_new_forklog():
-    url = 'https://forklog.com/news'
+    page_lenta = requests.get(url_lenta).text
 
-    page = requests.get(url).text
+    soup_lenta = BeautifulSoup(page_lenta, 'lxml')
 
-    soup = BeautifulSoup(page, 'lxml')
+    block_news_lenta = soup_lenta.find('ul', class_ ='rubric-page__container _subrubric')
 
-    block_news = soup.find('div', class_ = 'category_page_grid')
+    first_new_lenta = block_news_lenta.find_all('li')[0]
 
-    first_new = block_news.find_all('div')[0]
+    first_new_link_lenta = 'https://lenta.ru' + first_new_lenta.find('a', class_ = 'card-full-news _subrubric', href=True)["href"].strip()
 
-    first_new_link = first_new.find('a', href=True)["href"].strip()
+    links = [first_new_link_ria, first_new_link_habr, first_new_link_rcb, first_new_link_forklog, first_new_link_bits_media, first_new_link_lenta]
 
-    return first_new_link
-
-# bits.media
-
-def get_link_first_new_bits():
-    url = 'https://bits.media/news/'
-
-    page = requests.get(url).text
-
-    soup = BeautifulSoup(page, 'lxml')
-
-    block_news = soup.find('div', id ='main-news')
-
-    first_new = block_news.find_all('div')[1]
-
-    first_new_link = 'https://bits.media/pr/' + first_new.find('a', class_ = 'img-box', href=True)["href"].strip()
-
-    return first_new_link
-
-# lenta
-
-def get_link_first_new_lenta():
-    url = 'https://lenta.ru/rubrics/economics/crypto/'
-
-    page = requests.get(url).text
-
-    soup = BeautifulSoup(page, 'lxml')
-
-    block_news = soup.find('ul', class_ ='rubric-page__container _subrubric')
-
-    first_new = block_news.find_all('li')[0]
-
-    first_new_link = 'https://lenta.ru' + first_new.find('a', class_ = 'card-full-news _subrubric', href=True)["href"].strip()
-
-    return first_new_link
+    return links

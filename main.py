@@ -94,8 +94,9 @@ def rasp(message):
         bir = bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
         bot.register_next_step_handler(bir, exchange)
     elif message.text == 'Новости':
+        bot.send_message(message.chat.id, "Подождите, идёт загрузка новостей...")
         knopki = button_utils.news
-        links = [functions.get_link_first_new_bits(), functions.get_link_first_new_forklog(), functions.get_link_first_new_habr(), functions.get_link_first_new_lenta(), functions.get_link_first_new_rcb(), functions.get_link_first_new_ria()]
+        links = functions.get_links_news()
         current_function = 'Новости'
         bot.send_message(message.chat.id, 'Хотите получить свежую новость?', reply_markup = knopki)
     else:
