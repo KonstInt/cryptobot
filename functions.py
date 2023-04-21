@@ -85,7 +85,7 @@ def trades_find_bid(coin1="btc", coin2="usd"):
     return info
 
 def get_links_news():
-    
+
     # ria
     url_ria = 'https://ria.ru/product_kriptovalyuta/'
 
@@ -95,7 +95,7 @@ def get_links_news():
 
     block_news_ria = soup_ria.find('div', class_ = 'list list-tags')
 
-    first_new_ria = block_news_ria.find_all('div')[0]
+    first_new_ria = block_news_ria.find('div')
 
     first_new_link_ria = first_new_ria.find('a', href=True)["href"].strip()
 
@@ -108,7 +108,7 @@ def get_links_news():
 
     block_news_habr  = soup_habr.find('div', class_ = 'tm-articles-list')
 
-    first_new_habr  = block_news_habr.find_all('article')[0]
+    first_new_habr  = block_news_habr.find('article')
 
     first_new_link_habr  = 'https://habr.com' + first_new_habr.find('a', class_ = 'tm-title__link', href = True)["href"].strip()
 
@@ -121,7 +121,7 @@ def get_links_news():
 
     block_news_rcb = soup_rcb.find('div', class_ = 'js-load-container')
 
-    first_new_rcb = block_news_rcb.find_all('div')[0]
+    first_new_rcb = block_news_rcb.find('div')
 
     first_new_link_rcb = first_new_rcb.find('a', class_='item__link rm-cm-item-link js-rm-central-column-item-link', href=True)["href"].strip()
 
@@ -135,7 +135,7 @@ def get_links_news():
 
     block_news_forklog = soup_forklog.find('div', class_ = 'category_page_grid')
 
-    first_new_forklog = block_news_forklog.find_all('div')[0]
+    first_new_forklog = block_news_forklog.find('div')
 
     first_new_link_forklog = first_new_forklog.find('a', href=True)["href"].strip()
 
@@ -148,7 +148,7 @@ def get_links_news():
 
     block_news_bits_media = soup_bits_media.find('div', id ='main-news')
 
-    first_new_bits_media = block_news_bits_media.find_all('div')[1]
+    first_new_bits_media = block_news_bits_media.find('div', class_ = 'news-item')
 
     first_new_link_bits_media = 'https://bits.media/pr/' + first_new_bits_media.find('a', class_ = 'img-box', href=True)["href"].strip()
 
@@ -161,10 +161,25 @@ def get_links_news():
 
     block_news_lenta = soup_lenta.find('ul', class_ ='rubric-page__container _subrubric')
 
-    first_new_lenta = block_news_lenta.find_all('li')[0]
+    first_new_lenta = block_news_lenta.find('li')
 
     first_new_link_lenta = 'https://lenta.ru' + first_new_lenta.find('a', class_ = 'card-full-news _subrubric', href=True)["href"].strip()
 
-    links = [first_new_link_ria, first_new_link_habr, first_new_link_rcb, first_new_link_forklog, first_new_link_bits_media, first_new_link_lenta]
+    # 1prime
+
+    url_1_prime = 'https://1prime.ru/trend/bitcoins/'
+
+    page_1_prime = requests.get(url_1_prime).text
+
+    soup_1_prime = BeautifulSoup(page_1_prime, 'lxml')
+
+    block_news_1_prime = soup_1_prime.find('div', class_ ='rubric-list__articles')
+
+    first_new_1_prime = block_news_1_prime.find_all('article')[1]
+
+    first_new_link_1_prime = 'https://1prime.ru' + first_new_1_prime.find('a', href=True)["href"].strip()
+
+
+    links = [first_new_link_ria, first_new_link_habr, first_new_link_rcb, first_new_link_forklog, first_new_link_bits_media, first_new_link_lenta, first_new_link_1_prime]
 
     return links
