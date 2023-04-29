@@ -13,7 +13,7 @@ import search
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot('6109307024:AAEH5mXIan0W08M06Co3E1uUzMCMgbgbKjI')
+bot = telebot.TeleBot('')
 current_function = ''
 
 @bot.message_handler(commands=['start', 'close', 'help'])
