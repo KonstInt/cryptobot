@@ -9,17 +9,17 @@ from py_currency_converter import convert
 from pycoingecko import CoinGeckoAPI
 from telebot import types
 import json
-from config import token
-
+import search
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot(token)
+bot = telebot.TeleBot('6109307024:AAEH5mXIan0W08M06Co3E1uUzMCMgbgbKjI')
 current_function = ''
 
 @bot.message_handler(commands=['start', 'close', 'help'])
 def adim(message):
     knopki = button_utils.menu_buttons
+    
     if message.text=='/close':
         adem(message)
     elif message.text == '/start':
@@ -208,7 +208,8 @@ def mine(message):
     elif message.text == '/help':
         adim(message)
         return
-    m = bot.send_message(message.chat.id, strings.sovets[message.text], reply_markup=buttons)
+    rv = search.search_results(message.text)
+    m = bot.send_message(message.chat.id, rv , reply_markup=buttons)
     bot.register_next_step_handler(m, mine)
     
 
