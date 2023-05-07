@@ -9,9 +9,10 @@ from pycoingecko import CoinGeckoAPI
 from telebot import types
 import search
 cg = CoinGeckoAPI()
+import re
 
 
-bot = telebot.TeleBot('6109307024:AAEH5mXIan0W08M06Co3E1uUzMCMgbgbKjI')
+bot = telebot.TeleBot('6260207697:AAHKctNDE5iT9o5AXJaOQO6mtSRuhg5hYOY')
 current_function = ''
 
 @bot.message_handler(commands=['start', 'close', 'help'])
@@ -58,7 +59,7 @@ def rasp(message):
     elif message.text == "Выбор видеокарты":
         current_function = message.text
         v = bot.send_message(message.chat.id,
-                             'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число) и название монеты, которую хочешь майнить. Например: "500 etc".',
+                             'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число), который планируешь потратить на покупку одной видеокарты, и название монеты (в долларах USD), и название монеты, которую хочешь майнить. Например: "500 btc".',
                              reply_markup=button_utils.videocart)
         bot.register_next_step_handler(message, find_best_graphics_card_message)
     elif message.text == 'Данные с биржи':
@@ -232,16 +233,11 @@ def find_best_graphics_card(budget, coin):
 def find_best_graphics_card_message(message):
     text = message.text.lower()
     if message.text == 'Меню':
-        global current_function
-        current_function = ''
-        adim(message)
-        return
-    elif message.text == '/help':
         adim(message)
         return
     elif " " not in text:
         bot.send_message(message.chat.id,
-                         "Некорректный ввод. Введи бюджет (число) и название монеты, которую хочешь майнить. Например: '500 etc'.")
+                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты (в долларах USD), и название монеты, которую хочешь майнить. Например: '200 bitcoin'.")
         return
 
     budget, coin = text.split(" ", 1)
@@ -249,16 +245,31 @@ def find_best_graphics_card_message(message):
         budget = int(budget)
     except ValueError:
         bot.send_message(message.chat.id,
-                         "Некорректный ввод. Введи бюджет (число) и название монеты, которую хочешь майнить. Например: '500 etc'.")
+                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты, и название монеты (в долларах USD), которую хочешь майнить. Например: '200 bitcoin'.")
         return
 
-    card = find_best_graphics_card(budget, coin)
+    crypto_currencies = {
+        'btc': ['биткоин', 'btc', 'bitcoin', 'биток'],
+        'ethw': ['эфириум', 'eth', 'ethereum', 'эфир'],
+        'ltc': ['лайткоин', 'ltc', 'litecoin'],
+        'doge': ['джеккоин', 'doge', 'dogecoin'],
+    }
+
+    coin_for_search = coin
+
+    for currency, names in crypto_currencies.items():
+        for name in names:
+            if name in coin:
+                coin_for_search = currency
+
+    card = find_best_graphics_card(budget, coin_for_search)
     if not card:
         bot.send_message(message.chat.id, "К сожалению, не удалось найти подходящую видеокарту.")
         return
 
     bot.send_message(message.chat.id,
                      f"Оптимальная видеокарта для майнинга {data_all_cards['Data'][card]['CurrenciesAvailableName']} с бюджетом {budget} USD: \n\n {data_all_cards['Data'][card]['Name']}\n {data_all_cards['Data'][card]['AffiliateURL']}")
+
 
 
 @bot.message_handler(func = lambda x: current_function == 'Данные с биржи')
