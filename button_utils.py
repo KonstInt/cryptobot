@@ -1,11 +1,7 @@
 from telebot import types
 
 mining_sovets = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-mining_sovets.add(types.KeyboardButton('Что такое майнинг?'),
-                  types.KeyboardButton('Что такое трейдинг?'),
-                  types.KeyboardButton('Стратегии трейдинга'),
-                  types.KeyboardButton('Советы для трейдинга'),
-                  types.KeyboardButton('Меню'))
+mining_sovets.add(types.KeyboardButton('Меню'))
 valute = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
 valute.add(types.KeyboardButton('RUB'), types.KeyboardButton('USD'),
            types.KeyboardButton('EUR'), types.KeyboardButton('CNY'),
@@ -27,4 +23,11 @@ buttons_exchange = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
 buttons_exchange.add(types.KeyboardButton('Сумма проданных монет'),
         types.KeyboardButton('Сумма купленных монет'),
         types.KeyboardButton('Общая сумма выставленных на закуп монет'),
+        types.KeyboardButton('Меню'))
+buttons_crypto = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+buttons_crypto.add(types.KeyboardButton('btc'),
+        types.KeyboardButton('eth'),
+        types.KeyboardButton('ltc'),
+        types.KeyboardButton('usdt'),
+        types.KeyboardButton('Назад'),
         types.KeyboardButton('Меню'))
