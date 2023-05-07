@@ -9,11 +9,12 @@ from py_currency_converter import convert
 from pycoingecko import CoinGeckoAPI
 from telebot import types
 import json
+import re
 
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot("6260207697:AAHKctNDE5iT9o5AXJaOQO6mtSRuhg5hYOY")
+bot = telebot.TeleBot("6154137866:AAF3p5BCuevuqWyD1QJmvN3jnqvetfr6vbQ")
 
 
 @bot.message_handler(commands=['start'])
@@ -176,7 +177,7 @@ def find_best_graphics_card_message(message):
         return
     elif " " not in text:
         bot.send_message(message.chat.id,
-                         "Некорректный ввод. Введи бюджет (число) и название монеты, которую хочешь майнить. Например: '200 amd'.")
+                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты, и название монеты, которую хочешь майнить. Например: '200 bitcoin'.")
         return
 
     budget, coin = text.split(" ", 1)
@@ -184,10 +185,24 @@ def find_best_graphics_card_message(message):
         budget = int(budget)
     except ValueError:
         bot.send_message(message.chat.id,
-                         "Некорректный ввод. Введи бюджет (число) и название монеты, которую хочешь майнить. Например: '200 amd'.")
+                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты, и название монеты, которую хочешь майнить. Например: '200 bitcoin'.")
         return
 
-    card = find_best_graphics_card(budget, coin)
+    crypto_currencies = {
+        'btc': ['биткоин', 'btc', 'bitcoin', 'биток'],
+        'ethw': ['эфириум', 'eth', 'ethereum', 'эфир'],
+        'ltc': ['лайткоин', 'ltc', 'litecoin'],
+        'doge': ['джеккоин', 'doge', 'dogecoin'],
+    }
+
+    coin_for_search = coin
+
+    for currency, names in crypto_currencies.items():
+        for name in names:
+            if name in coin:
+                coin_for_search = currency
+
+    card = find_best_graphics_card(budget, coin_for_search)
     if not card:
         bot.send_message(message.chat.id, "К сожалению, не удалось найти подходящую видеокарту.")
         return
