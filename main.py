@@ -14,7 +14,7 @@ import re
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot("6154137866:AAF3p5BCuevuqWyD1QJmvN3jnqvetfr6vbQ")
+bot = telebot.TeleBot("6260207697:AAHKctNDE5iT9o5AXJaOQO6mtSRuhg5hYOY")
 
 
 @bot.message_handler(commands=['start'])
@@ -58,7 +58,7 @@ def rasp(message):
 
     elif message.text == "Выбор видеокарты":
         v = bot.send_message(message.chat.id,
-                             'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число) и название монеты, которую хочешь майнить. Например: "200 amd"".',
+                             'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число), который планируешь потратить на покупку одной видеокарты (в долларах USD), и название монеты, которую хочешь майнить. Например: "200 btc"".',
                              reply_markup=button_utils.videocart)
 
         bot.register_next_step_handler(message, find_best_graphics_card_message)
@@ -177,7 +177,7 @@ def find_best_graphics_card_message(message):
         return
     elif " " not in text:
         bot.send_message(message.chat.id,
-                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты, и название монеты, которую хочешь майнить. Например: '200 bitcoin'.")
+                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты (в долларах USD), и название монеты, которую хочешь майнить. Например: '200 bitcoin'.")
         return
 
     budget, coin = text.split(" ", 1)
@@ -185,7 +185,7 @@ def find_best_graphics_card_message(message):
         budget = int(budget)
     except ValueError:
         bot.send_message(message.chat.id,
-                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты, и название монеты, которую хочешь майнить. Например: '200 bitcoin'.")
+                         "Некорректный ввод. Введи бюджет (число), который планируешь потратить на покупку одной видеокарты, и название монеты (в долларах USD), которую хочешь майнить. Например: '200 bitcoin'.")
         return
 
     crypto_currencies = {
