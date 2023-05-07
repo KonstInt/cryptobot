@@ -57,21 +57,15 @@ def rasp(message):
         bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=knopki)
 
     elif message.text == "Выбор видеокарты":
-        
         current_function = message.text
         v = bot.send_message(message.chat.id,
                              'Чтобы найти оптимальную видеокарту для майнинга криптовалюты, введи бюджет (число) и название монеты, которую хочешь майнить. Например: "500 etc".',
                              reply_markup=button_utils.videocart)
         bot.register_next_step_handler(message, find_best_graphics_card_message)
     elif message.text == 'Данные с биржи':
-        knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
-        knopka1 = "Сумма проданных монет"
-        knopka2 = "Сумма купленных монет"
-        knopka3 = "Общая сумма выставленных на закуп монет"
-        knopka4 = "Меню"
-        knopki.add(knopka1, knopka2, knopka3, knopka4)
-        bir = bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
-        bot.register_next_step_handler(bir, exchange)
+        knopki = button_utils.buttons_exchange
+        current_function = message.text
+        bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
     elif message.text == 'Новости':
         bot.send_message(message.chat.id, "Подождите, идёт загрузка новостей...")
         knopki = button_utils.news
@@ -267,7 +261,10 @@ def find_best_graphics_card_message(message):
     bot.send_message(message.chat.id,
                      f"Оптимальная видеокарта для майнинга {data_all_cards['Data'][card]['CurrenciesAvailableName']} с бюджетом {budget} USD: \n\n {data_all_cards['Data'][card]['Name']}\n {data_all_cards['Data'][card]['AffiliateURL']}")
 
+
+@bot.message_handler(func = lambda x: current_function == 'Данные с биржи')
 def exchange(message):
+    global current_function
     if (message.text == "Общая сумма выставленных на закуп монет"):
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
         knopka1 = "btc"
@@ -277,9 +274,11 @@ def exchange(message):
         knopka5 = "Назад"
         knopka6 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
-        ex = bot.send_message(message.chat.id, f"Выберите валюту для подсчёта", reply_markup=knopki)
-        bot.register_next_step_handler(ex, exchange_sum)
+        current_function = 'Данные с биржи sum'
+        bot.send_message(message.chat.id, f"Выберите валюту для подсчёта", reply_markup=knopki)
+        
     elif (message.text == "Меню"):
+        current_function = ''
         adim(message)
     elif (message.text == "Сумма проданных монет"):
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
@@ -290,14 +289,8 @@ def exchange(message):
         knopka5 = "Назад"
         knopka6 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
-        ex1 = bot.send_message(message.chat.id, f"Выберите валюту для подсчёта", reply_markup=knopki)
-        bot.register_next_step_handler(ex1, exchange_ask)
-    elif message.text == '/help':
-        adim(message)
-        return
-    elif message.text == '/close':
-        adem(message)
-        return
+        current_function = 'Данные с биржи ask'
+        bot.send_message(message.chat.id, f"Выберите валюту для подсчёта", reply_markup=knopki)
     else:
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
         knopka1 = "btc"
@@ -307,12 +300,15 @@ def exchange(message):
         knopka5 = "Назад"
         knopka6 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
-        ex2 = bot.send_message(message.chat.id, f"Выберите валюту для подсчёта", reply_markup=knopki)
-        bot.register_next_step_handler(ex2, exchange_bid)
+        current_function = 'Данные с биржи bid'
+        bot.send_message(message.chat.id, f"Выберите валюту для подсчёта", reply_markup=knopki)
+       
 
 
 
+@bot.message_handler(func = lambda x: current_function == 'Данные с биржи bid')
 def exchange_bid(message):
+    global current_function
     if (message.text == "Назад"):
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
         knopka1 = "Сумма проданных монет"
@@ -320,16 +316,12 @@ def exchange_bid(message):
         knopka3 = "Общая сумма выставленных на закуп монет"
         knopka4 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4)
-        bir2 = bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
-        bot.register_next_step_handler(bir2, exchange)
+        current_function = 'Данные с биржи'
+        bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
     elif (message.text == "Меню"):
+        current_function = ''
         adim(message)
-    elif message.text == '/help':
-        adim(message)
-        return
-    elif message.text == '/close':
-        adem(message)
-        return
+   
     else:
         bot.send_message(message.chat.id, functions.trades_find_bid(coin1=message.text))
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
@@ -340,11 +332,12 @@ def exchange_bid(message):
         knopka5 = "Назад"
         knopka6 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
-        ex_bid = bot.send_message(message.chat.id, "Выберите валюту", reply_markup=knopki)
-        bot.register_next_step_handler(ex_bid, exchange_bid)
+        bot.send_message(message.chat.id, "Выберите валюту", reply_markup=knopki)
 
 
+@bot.message_handler(func = lambda x: current_function == 'Данные с биржи ask')
 def exchange_ask(message):
+    global current_function
     if (message.text == "Назад"):
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
         knopka1 = "Сумма проданных монет"
@@ -352,16 +345,11 @@ def exchange_ask(message):
         knopka3 = "Общая сумма выставленных на закуп монет"
         knopka4 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4)
-        bir2 = bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
-        bot.register_next_step_handler(bir2, exchange)
+        current_function = 'Данные с биржи'
+        bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
     elif (message.text == "Меню"):
         adim(message)
-    elif message.text == '/help':
-        adim(message)
-        return
-    elif message.text == '/close':
-        adem(message)
-        return
+ 
     else:
         bot.send_message(message.chat.id, functions.trades_find_ask(coin1=message.text))
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
@@ -372,11 +360,12 @@ def exchange_ask(message):
         knopka5 = "Назад"
         knopka6 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
-        ex_ask = bot.send_message(message.chat.id, "Выберите валюту", reply_markup=knopki)
-        bot.register_next_step_handler(ex_ask, exchange_ask)
+        bot.send_message(message.chat.id, "Выберите валюту", reply_markup=knopki)
 
 
+@bot.message_handler(func = lambda x: current_function == 'Данные с биржи sum')
 def exchange_sum(message):
+    global current_function 
     if (message.text == "Назад"):
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
         knopka1 = "Сумма проданных монет"
@@ -384,16 +373,10 @@ def exchange_sum(message):
         knopka3 = "Общая сумма выставленных на закуп монет"
         knopka4 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4)
-        bir2 = bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
-        bot.register_next_step_handler(bir2, exchange)
-    elif (message.text == "Меню"):
-        adim(message)
-    elif message.text == '/help':
-        adim(message)
-        return
-    elif message.text == '/close':
-        adem(message)
-        return
+        current_function = 'Данные с биржи'
+        bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
+        
+  
     else:
         bot.send_message(message.chat.id, functions.depth_find(coin1 = message.text))
         knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
@@ -404,6 +387,6 @@ def exchange_sum(message):
         knopka5 = "Назад"
         knopka6 = "Меню"
         knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5, knopka6)
-        ex2 = bot.send_message(message.chat.id, "Выберите валюту", reply_markup=knopki)
-        bot.register_next_step_handler(ex2, exchange_sum)
+        bot.send_message(message.chat.id, "Выберите валюту", reply_markup=knopki)
+        
 bot.infinity_polling()

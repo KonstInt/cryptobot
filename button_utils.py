@@ -23,3 +23,8 @@ menu_buttons.add(types.KeyboardButton('Курс криптовалют'),
         types.KeyboardButton('Данные с биржи'),
         types.KeyboardButton('Выбор видеокарты'),
         types.KeyboardButton('Новости'))
+buttons_exchange = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+buttons_exchange.add(types.KeyboardButton('Сумма проданных монет'),
+        types.KeyboardButton('Сумма купленных монет'),
+        types.KeyboardButton('Общая сумма выставленных на закуп монет'),
+        types.KeyboardButton('Меню'))
