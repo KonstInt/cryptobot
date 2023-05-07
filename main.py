@@ -1,6 +1,6 @@
 import telebot
 import strings
-import copy
+
 import functions
 import button_utils
 from telebot import types
@@ -8,18 +8,16 @@ import requests
 from py_currency_converter import convert
 from pycoingecko import CoinGeckoAPI
 from telebot import types
-import json
 import search
 cg = CoinGeckoAPI()
 
 
-bot = telebot.TeleBot('')
+bot = telebot.TeleBot('6109307024:AAEH5mXIan0W08M06Co3E1uUzMCMgbgbKjI')
 current_function = ''
 
 @bot.message_handler(commands=['start', 'close', 'help'])
 def adim(message):
     knopki = button_utils.menu_buttons
-    
     if message.text=='/close':
         adem(message)
     elif message.text == '/start':
@@ -36,46 +34,27 @@ def adim(message):
         vib = bot.send_message(message.chat.id, f'Я вас не понимаю...\nВыберите опцию нажав на кнопки ниже', reply_markup=knopki)
         bot.register_next_step_handler(vib, rasp)
 
-# def help(message):
-#     global current_function
-#     bot.send_message(message.chat.id, strings.help_command)
-#     current_function = ''
-#     adim('/start')
-#     return 
 
 links = []
 def rasp(message):
     global current_function
     global links
     if message.text == 'Курс криптовалют':
-        knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
-        knopka1 = types.KeyboardButton('RUB')
-        knopka2 = types.KeyboardButton('USD')
-        knopka3 = types.KeyboardButton('EUR')
-        knopka = types.KeyboardButton('CNY')
-        knopka4 = types.KeyboardButton('Меню')
-        knopki.add(knopka1, knopka2, knopka3, knopka, knopka4)
-        cr = bot.send_message(message.chat.id, 'Во что конвертировать?', reply_markup=knopki)
-        bot.register_next_step_handler(cr, crypto)
+        knopki = button_utils.valute
+        current_function = message.text
+        bot.send_message(message.chat.id, 'Во что конвертировать?', reply_markup=knopki)
     elif message.text == "Основы майнинга":
-        osn = bot.send_message(message.chat.id, 'Что Вас интересует?', reply_markup=button_utils.mining_sovets)
-        bot.register_next_step_handler(osn, mine)
+        current_function = message.text
+        bot.send_message(message.chat.id, 'Что Вас интересует?', reply_markup=button_utils.mining_sovets)
     elif message.text == "/close":
         adem(message)
     elif message.text == '/help':
         adim(message)
         return
     elif message.text == "Курс валют":
-        knopki = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
-        knopka1 = "RUB"
-        knopka2 = "USD"
-        knopka3 = "EUR"
-        knopka4 = "CNY"
-        knopka5 = "Меню"
-        knopki.add(knopka1, knopka2, knopka3, knopka4, knopka5)
-        current_function = 'Курс валют'
+        knopki = button_utils.valute
+        current_function = message.text
         bot.send_message(message.chat.id, "Какую валюту Вы хотите конвертировать?", reply_markup=knopki)
-        #bot.register_next_step_handler(k, kurs)
 
     elif message.text == "Выбор видеокарты":
         
@@ -97,7 +76,7 @@ def rasp(message):
         bot.send_message(message.chat.id, "Подождите, идёт загрузка новостей...")
         knopki = button_utils.news
         links = functions.get_links_news()
-        current_function = 'Новости'
+        current_function =  message.text
         bot.send_message(message.chat.id, 'Хотите получить свежую новость?', reply_markup = knopki)
     else:
         adim(message)
@@ -121,9 +100,7 @@ def get_news_1(message):
     elif message.text == '/help':
         adim(message)
         return
-        # bot.send_message(message.chat.id, strings.help_command)
-        # vib = bot.send_message(message.chat.id, f'Теперь выберите подходящую Вам опцию ', reply_markup=button_utils.menu_buttons)
-        # bot.register_next_step_handler(vib, rasp)
+       
 
 @bot.message_handler(func = lambda x: current_function == 'Новости 2')
 def get_news_2(message):
@@ -181,8 +158,11 @@ def kurs2(message):
     
 
 
+@bot.message_handler(func = lambda x: current_function == 'Курс криптовалют')
 def crypto(message):
+    global current_function
     if message.text == 'Меню':
+        current_function = ''
         adim(message)
         return
     elif message.text == "/close":
@@ -193,10 +173,12 @@ def crypto(message):
         return
 
     bot.send_message(message.chat.id, functions.cryptoStr(message.text.lower()))
-    cr = bot.send_message(message.chat.id, 'Во что конвертировать?', reply_markup=button_utils.valute)
-    bot.register_next_step_handler(cr, crypto)
+    bot.send_message(message.chat.id, 'Во что конвертировать?', reply_markup=button_utils.valute)
+   
 
 
+
+@bot.message_handler(func = lambda x: current_function == 'Основы майнинга')
 def mine(message):
     buttons = button_utils.mining_sovets
     if message.text == 'Меню':
