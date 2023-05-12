@@ -12,10 +12,10 @@ cg = CoinGeckoAPI()
 import re
 
 
-bot = telebot.TeleBot('6260207697:AAHKctNDE5iT9o5AXJaOQO6mtSRuhg5hYOY')
+bot = telebot.TeleBot('6260207697:AAFKMmqvvVWrF_ijfuZkpFJCj1PIwPW9Fr0')
 current_function = ''
 
-@bot.message_handler(commands=['start', 'close', 'help'])
+@bot.message_handler(commands=['start', 'close', 'help', 'menu'])
 def adim(message):
     knopki = button_utils.menu_buttons
     if message.text=='/close':
@@ -23,7 +23,7 @@ def adim(message):
     elif message.text == '/start':
         vib = bot.send_message(message.chat.id, f'Привет {message.from_user.first_name}\nВыберите опцию ', reply_markup=knopki)
         bot.register_next_step_handler(vib, rasp)
-    elif message.text == 'Меню':
+    elif message.text == 'Меню' or message.text == '/menu':
         vib = bot.send_message(message.chat.id, f'Выберите опцию ', reply_markup=knopki)
         bot.register_next_step_handler(vib, rasp)
     elif message.text == '/help':
@@ -330,6 +330,7 @@ def exchange_ask(message):
         current_function = 'Данные с биржи'
         bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
     elif (message.text == "Меню"):
+        current_function = ''
         adim(message)
  
     else:
@@ -350,7 +351,9 @@ def exchange_sum(message):
         knopki.add(knopka1, knopka2, knopka3, knopka4)
         current_function = 'Данные с биржи'
         bot.send_message(message.chat.id, "Какая информация вам интересна?", reply_markup=knopki)
-        
+    elif (message.text == "Меню"):
+        current_function = ''
+        adim(message)    
   
     else:
         bot.send_message(message.chat.id, functions.depth_find(coin1 = message.text))

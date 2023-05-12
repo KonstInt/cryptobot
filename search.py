@@ -11,7 +11,6 @@ def search_results(str):
   resp = requests.get(URL, headers=headers)
   if resp.status_code == 200:
     soup = BeautifulSoup(resp.content, "html.parser")
-    print(resp.content)
   results = []
   tmp = ''
   for g in soup.find_all('div', class_='MjjYud'):
